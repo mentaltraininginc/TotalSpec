@@ -1,3 +1,5 @@
+![TotalSpec](TotalSpec.logo.jpg)
+
 # TotalSpec — VS Code Extension
 
 Syntax highlighting for `.totalspec` files — a 15-dimension behavioral specification format designed for AI-assisted software development.
