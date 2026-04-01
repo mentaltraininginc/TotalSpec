@@ -2,7 +2,7 @@
   "name": "totalspec-language",
   "displayName": "Total Spec Language",
   "description": "Syntax highlighting for Total Spec behavioral specification documents (.totalspec)",
-  "version": "2.2.18",
+  "version": "2.3.0",
   "publisher": "mentaltraininginc",
   "license": "MIT",
   "repository": {
@@ -13,6 +13,12 @@
   "engines": {
     "vscode": "^1.75.0"
   },
+  "keywords": ["totalspec", "specification", "behavioral", "spec", "syntax-highlighting"],
+  "galleryBanner": {
+    "color": "#1E1E2E",
+    "theme": "dark"
+  },
+  "activationEvents": ["onLanguage:totalspec"],
   "categories": ["Programming Languages"],
   "main": "./extension.js",
   "contributes": {

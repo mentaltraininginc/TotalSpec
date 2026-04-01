@@ -6,8 +6,8 @@ const DEPTH_COLORS = {
     5: '#FF8AD5',  // ░▒▓██  Level 5 — document title — light bubblegum pink
     4: '#FF5AC8',  // ░▒▓█   Level 4 — behavior headers, subtitles
     3: '#F030BD',  // ░▒▓    Level 3 — ALL dimension headers (D1-D15 same color)
-    2: '#CC20A8',  // ░▒     Level 2 — version, postconditions
-    1: '#AA1590',  // ░      Level 1 — date, deepest indent
+    2: '#D930B5',  // ░▒     Level 2 — version, postconditions
+    1: '#CC25AA',  // ░      Level 1 — date, deepest indent
 };
 
 const SEPARATOR_COLOR = '#FF5AC8';
@@ -24,13 +24,11 @@ const LOG_LEVEL_COLORS = {
 // ─── Decoration Type Factories ────────────────────────────────────────────
 
 function createDecorationType(color, bold) {
-    const css = bold
-        ? `none; color: ${color} !important; font-weight: bold !important`
-        : `none; color: ${color} !important`;
-    return vscode.window.createTextEditorDecorationType({
-        color: color,
-        textDecoration: css,
-    });
+    const options = { color: color };
+    if (bold) {
+        options.fontWeight = 'bold';
+    }
+    return vscode.window.createTextEditorDecorationType(options);
 }
 
 // ─── Decoration Types ─────────────────────────────────────────────────────
@@ -51,7 +49,6 @@ const backtickDecoration = vscode.window.createTextEditorDecorationType({
     color: '#9CDCFE',
     backgroundColor: '#1E1E3A',
     borderRadius: '3px',
-    textDecoration: 'none; color: #9CDCFE !important',
 });
 
 // Log levels
@@ -82,7 +79,7 @@ const RE_TITLE_2 = /^░▒(?!▓)(.*)$/;
 const RE_TITLE_1 = /^░(?!░)(?!▒)\s+(.*)$/;
 const RE_SEPARATOR = /^░{10,}$/;
 const RE_BEHAVIOR = /^(░▒▓█)\s+(B\d+)(:)(.*)$/;
-const RE_DIMENSION = /^(░▒▓)\s+(B\d+-D(\d+))(:)\s*(\S.*)$/;
+const RE_DIMENSION = /^(░▒▓)\s+(B\d+-D(\d+))(:)(.*)$/;
 
 // Line-start labels: "Word or phrase:" at start of line
 const RE_LABEL = /^([A-Z][A-Za-z /]+:)/;
@@ -97,7 +94,7 @@ const RE_LOG_INFO = /\bINFO\b/g;
 const RE_LOG_DEBUG = /\b(DEBUG|TRACE)\b/g;
 
 // Action verbs — past/present/gerund forms
-const RE_ACTION = /\b(log|logged|logging|test|tested|testing|scan|scanned|scanning|re-scan|re-scanned|rescan|rescanned|move|moved|moving|delete|deleted|deleting|rename|renamed|renaming|remove|removed|removing|send|sent|sending|receive|received|receiving|purge|purged|purging|create|created|creating|update|updated|updating|fetch|fetched|fetching|write|written|writing|read|skip|skipped|skipping|merge|merged|merging|apply|applied|applying|trigger|triggered|triggering|queue|queued|queuing|retry|retried|retrying|fail|failed|failing|verify|verified|verifying|process|processed|processing|download|downloaded|downloading|upload|uploaded|uploading|import|imported|importing|export|exported|exporting|resolve|resolved|resolving|detect|detected|detecting|preserve|preserved|preserving|restore|restored|restoring|associate|associated|associating|cascade|cascaded|cascading|dismantle|dismantled|dismantling|reconcile|reconciled|reconciling)\b/gi;
+const RE_ACTION = /\b(log|logged|logging|test|tested|testing|scan|scanned|scanning|re-scan|re-scanned|rescan|rescanned|move|moved|moving|delete|deleted|deleting|rename|renamed|renaming|remove|removed|removing|send|sent|sending|receive|received|receiving|purge|purged|purging|create|created|creating|update|updated|updating|fetch|fetched|fetching|write|written|writing|read|reading|skip|skipped|skipping|merge|merged|merging|apply|applied|applying|trigger|triggered|triggering|queue|queued|queuing|retry|retried|retrying|verify|verified|verifying|process|processed|processing|download|downloaded|downloading|upload|uploaded|uploading|import|imported|importing|export|exported|exporting|resolve|resolved|resolving|detect|detected|detecting|preserve|preserved|preserving|restore|restored|restoring|associate|associated|associating|cascade|cascaded|cascading|dismantle|dismantled|dismantling|reconcile|reconciled|reconciling)\b/gi;
 
 // Logical operators — ALL CAPS only
 const RE_LOGIC = /\b(AND|OR|NOT|NOR|ALL|NONE|BOTH|EITHER|NEITHER|ALWAYS|NEVER|ONLY|MUST|SHALL|REQUIRED|OPTIONAL|EVERY|ANY|EACH)\b/g;
@@ -114,7 +111,6 @@ function applyDecorations(editor) {
     if (!editor || editor.document.languageId !== 'totalspec') return;
 
     const doc = editor.document;
-    const lines = doc.getText().split('\n');
 
     const ranges = {
         depth: { 5: [], 4: [], 3: [], 2: [], 1: [] },
@@ -134,8 +130,8 @@ function applyDecorations(editor) {
         fail: [],
     };
 
-    for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
+    for (let i = 0; i < doc.lineCount; i++) {
+        const line = doc.lineAt(i).text;
         let match;
 
         // ── Structural heading lines (mutually exclusive, use continue) ──
@@ -248,11 +244,39 @@ function charRange(_doc, lineNum, startChar, endChar) {
 
 // ─── Extension Lifecycle ──────────────────────────────────────────────────
 
-let debounceTimer;
+const debounceTimers = new Map();
+
+function decorateAllVisible() {
+    for (const editor of vscode.window.visibleTextEditors) {
+        applyDecorations(editor);
+    }
+}
 
 function activate(context) {
-    const ae = vscode.window.activeTextEditor;
-    if (ae) applyDecorations(ae);
+    // Dispose decoration types when the extension is deactivated
+    const allDecorations = [
+        ...Object.values(depthDecorations),
+        separatorDecoration,
+        dimensionDecoration,
+        labelDecoration,
+        backtickDecoration,
+        logErrorDecoration,
+        logWarnDecoration,
+        logInfoDecoration,
+        logDebugDecoration,
+        actionDecoration,
+        logicDecoration,
+        blockingDecoration,
+        specIssueDecoration,
+        passDecoration,
+        failDecoration,
+    ];
+    for (const deco of allDecorations) {
+        context.subscriptions.push(deco);
+    }
+
+    // Decorate all visible editors on activation
+    decorateAllVisible();
 
     context.subscriptions.push(
         vscode.window.onDidChangeActiveTextEditor(editor => {
@@ -261,18 +285,34 @@ function activate(context) {
     );
 
     context.subscriptions.push(
+        vscode.window.onDidChangeVisibleTextEditors(() => {
+            decorateAllVisible();
+        })
+    );
+
+    context.subscriptions.push(
         vscode.workspace.onDidChangeTextDocument(event => {
-            const editor = vscode.window.activeTextEditor;
-            if (editor && event.document === editor.document) {
-                if (debounceTimer) clearTimeout(debounceTimer);
-                debounceTimer = setTimeout(() => applyDecorations(editor), 150);
-            }
+            if (event.document.languageId !== 'totalspec') return;
+            const uri = event.document.uri.toString();
+            const existing = debounceTimers.get(uri);
+            if (existing) clearTimeout(existing);
+            debounceTimers.set(uri, setTimeout(() => {
+                debounceTimers.delete(uri);
+                for (const editor of vscode.window.visibleTextEditors) {
+                    if (editor.document === event.document) {
+                        applyDecorations(editor);
+                    }
+                }
+            }, 150));
         })
     );
 }
 
 function deactivate() {
-    if (debounceTimer) clearTimeout(debounceTimer);
+    for (const timer of debounceTimers.values()) {
+        clearTimeout(timer);
+    }
+    debounceTimers.clear();
 }
 
 module.exports = { activate, deactivate };

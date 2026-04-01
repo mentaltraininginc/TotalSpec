@@ -1,4 +1,4 @@
-![TotalSpec](TotalSpec.logo.jpg)
+![TotalSpec](https://raw.githubusercontent.com/mentaltraininginc/TotalSpec/main/TotalSpec.logo.jpg)
 
 # TotalSpec — VS Code Extension
 
@@ -21,6 +21,8 @@ TotalSpec is a structured specification format where each behavior is described 
 - **Line-start labels** — `Label:` patterns at the beginning of lines highlighted in gold
 - **Bracket conditions** — `[true]`, `[false]`, `[found]`, `[not found]`, etc.
 
+> **Note:** This extension is optimized for dark themes (e.g., Dark+, Monokai). The color palette may have insufficient contrast on light themes.
+
 ## Color Palette
 
 ### Heading Gradient (Hot Pink Spectrum)
@@ -30,8 +32,8 @@ TotalSpec is a structured specification format where each behavior is described 
 | 5 | `░▒▓██` | Light bubblegum pink | `#FF8AD5` | Document title |
 | 4 | `░▒▓█` | Bright pink | `#FF5AC8` | Behavior headers, subtitles |
 | 3 | `░▒▓` | Hot pink | `#F030BD` | Dimension headers (D1–D15) |
-| 2 | `░▒` | Deep pink | `#CC20A8` | Version, postconditions |
-| 1 | `░` | Deep magenta | `#AA1590` | Date, deepest indent |
+| 2 | `░▒` | Deep pink | `#D930B5` | Version, postconditions |
+| 1 | `░` | Deep magenta | `#CC25AA` | Date, deepest indent |
 
 ### Semantic Colors
 
@@ -39,7 +41,7 @@ TotalSpec is a structured specification format where each behavior is described 
 Any `CamelCase Label:` pattern at the start of a line.
 
 **Action verbs** — Slate Blue `#82AAFF`
-`log` `logged` `logging` `test` `tested` `testing` `scan` `scanned` `scanning` `re-scan` `re-scanned` `rescan` `rescanned` `move` `moved` `moving` `delete` `deleted` `deleting` `rename` `renamed` `renaming` `remove` `removed` `removing` `send` `sent` `sending` `receive` `received` `receiving` `purge` `purged` `purging` `create` `created` `creating` `update` `updated` `updating` `fetch` `fetched` `fetching` `write` `written` `writing` `read` `skip` `skipped` `skipping` `merge` `merged` `merging` `apply` `applied` `applying` `trigger` `triggered` `triggering` `queue` `queued` `queuing` `retry` `retried` `retrying` `fail` `failed` `failing` `verify` `verified` `verifying` `process` `processed` `processing` `download` `downloaded` `downloading` `upload` `uploaded` `uploading` `import` `imported` `importing` `export` `exported` `exporting` `resolve` `resolved` `resolving` `detect` `detected` `detecting` `preserve` `preserved` `preserving` `restore` `restored` `restoring` `associate` `associated` `associating` `cascade` `cascaded` `cascading` `dismantle` `dismantled` `dismantling` `reconcile` `reconciled` `reconciling`
+`log` `logged` `logging` `test` `tested` `testing` `scan` `scanned` `scanning` `re-scan` `re-scanned` `rescan` `rescanned` `move` `moved` `moving` `delete` `deleted` `deleting` `rename` `renamed` `renaming` `remove` `removed` `removing` `send` `sent` `sending` `receive` `received` `receiving` `purge` `purged` `purging` `create` `created` `creating` `update` `updated` `updating` `fetch` `fetched` `fetching` `write` `written` `writing` `read` `reading` `skip` `skipped` `skipping` `merge` `merged` `merging` `apply` `applied` `applying` `trigger` `triggered` `triggering` `queue` `queued` `queuing` `retry` `retried` `retrying` `verify` `verified` `verifying` `process` `processed` `processing` `download` `downloaded` `downloading` `upload` `uploaded` `uploading` `import` `imported` `importing` `export` `exported` `exporting` `resolve` `resolved` `resolving` `detect` `detected` `detecting` `preserve` `preserved` `preserving` `restore` `restored` `restoring` `associate` `associated` `associating` `cascade` `cascaded` `cascading` `dismantle` `dismantled` `dismantling` `reconcile` `reconciled` `reconciling`
 
 **Logical operators (ALL CAPS)** — Orange `#FF9D00`
 `AND` `OR` `NOT` `NOR` `ALL` `NONE` `BOTH` `EITHER` `NEITHER` `ALWAYS` `NEVER` `ONLY` `MUST` `SHALL` `REQUIRED` `OPTIONAL` `EVERY` `ANY` `EACH`
@@ -98,7 +100,8 @@ ext install mentaltraininginc.totalspec-language
 ```bash
 git clone https://github.com/mentaltraininginc/TotalSpec.git
 cd TotalSpec
-code --install-extension .
+npx @vscode/vsce package
+code --install-extension totalspec-language-*.vsix
 ```
 
 ## File Structure

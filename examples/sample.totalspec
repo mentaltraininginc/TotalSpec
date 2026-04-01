@@ -1,0 +1,84 @@
+░▒▓██ User Authentication System
+░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░
+
+░▒▓█ B1: User Login
+░▒▓ B1-D1: Trigger
+  When user submits login form with email AND password
+
+░▒▓ B1-D2: Preconditions
+  - User account [exists]
+  - Account is NOT locked
+  - REQUIRED: valid email format
+
+░▒▓ B1-D3: Input
+  Input: `email` (string), `password` (string)
+  Source: POST /api/auth/login
+
+░▒▓ B1-D4: Processing
+  - fetch user record by email
+  - verify password hash
+  - If credentials valid: create session token
+  - If credentials invalid: log failed attempt
+  On Failure: increment `failedAttempts` counter
+
+░▒▓ B1-D5: Output
+  Output: `{ token, expiresAt, user }` → client
+  Status: 200 OK [true] or 401 Unauthorized [false]
+
+░▒▓ B1-D6: Postconditions
+░▒ Session token stored in `sessions` table
+░ Last login timestamp updated
+
+░▒▓ B1-D7: Error Handling
+  BLOCKING: database connection failure
+  SPEC ISSUE: token generation timeout not defined
+  - If database unreachable: return 503
+  - If token generation fails: retry 3 times, then FAIL
+
+░▒▓ B1-D8: Logging
+  INFO: login attempt for `email`
+  ERROR: authentication failure — invalid credentials
+  WARN: account approaching lockout threshold
+  DEBUG: session token generated, expires at `expiresAt`
+
+░▒▓ B1-D9: Side Effects
+  - send welcome notification
+  - update analytics dashboard
+  - trigger session cleanup for expired tokens
+
+░▒▓ B1-D10: Security
+  - MUST rate-limit to 5 attempts per minute
+  - SHALL hash passwords with bcrypt
+  - NEVER log raw passwords
+  - ALWAYS sanitize email input
+
+░▒▓ B1-D11: Performance
+  - Target: < 200ms response time
+  - Database query MUST complete within 50ms
+  - Token generation: ~10ms
+
+░▒▓ B1-D12: Dependencies
+  - B2-D4 (session management)
+  - B3-D1 (notification service)
+  - /src/auth/login.ts
+  - $AUTH_SECRET environment variable
+
+░▒▓ B1-D13: Testing
+  PASS: valid credentials → 200 + token
+  PASS: invalid password → 401 + error message
+  FAIL: SQL injection in email field
+  - test with expired accounts
+  - verify lockout after 5 failed attempts ✓
+  - verify rate limiting ✗
+
+░▒▓ B1-D14: Edge Cases
+  - Unless account is SSO-only: allow password login
+  - While migration in progress: accept BOTH old AND new password hashes
+  - For each active session: check OPTIONAL `deviceId` field
+  - N/A for passwordless accounts
+
+░▒▓ B1-D15: Notes
+  Version: 2.3.0
+  Extracted from neffflix project where it was developed AND battle-tested.
+  For all questions → contact auth team
+  "This behavior is critical path" — see B1-D10 for security requirements

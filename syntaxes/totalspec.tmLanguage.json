@@ -21,7 +21,7 @@
   "repository": {
     "conditionals": {
       "comment": "Conditional keywords at start of line or after list marker (- )",
-      "match": "(?:^|(?<=^- )|(?<=^  - ))(If|When|Unless|While|For each|For all|On)\\b",
+      "match": "(?:^|(?<=^- )|(?<=^  - ))(If|When|Unless|While|For each|For all)\\b",
       "captures": {
         "1": { "name": "keyword.control.conditional.totalspec" }
       }
@@ -55,7 +55,7 @@
     },
     "http-methods": {
       "name": "keyword.other.http-method.totalspec",
-      "match": "\\b(GET|POST|PUT|DELETE|PATCH)\\b"
+      "match": "\\b(GET|POST|PUT|PATCH)\\b"
     },
     "booleans": {
       "name": "constant.language.boolean.totalspec",
