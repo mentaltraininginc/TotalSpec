@@ -1,0 +1,43 @@
+{
+  "name": "totalspec-language",
+  "displayName": "Total Spec Language",
+  "description": "Syntax highlighting for Total Spec behavioral specification documents (.totalspec)",
+  "version": "2.2.18",
+  "publisher": "mentaltraininginc",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mentaltraininginc/TotalSpec"
+  },
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": ["Programming Languages"],
+  "main": "./extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "totalspec",
+        "aliases": ["Total Spec", "totalspec"],
+        "extensions": [".totalspec"],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "totalspec",
+        "scopeName": "source.totalspec",
+        "path": "./syntaxes/totalspec.tmLanguage.json"
+      }
+    ],
+    "configurationDefaults": {
+      "[totalspec]": {
+        "editor.fontFamily": "'JetBrains Mono', 'Fira Code', 'Cascadia Code', 'DejaVu Sans Mono', monospace",
+        "editor.fontSize": 13,
+        "editor.lineHeight": 20,
+        "editor.unicodeHighlight.nonBasicASCII": false
+      }
+    }
+  }
+}
