@@ -35,20 +35,48 @@ TotalSpec is a structured specification format where each behavior is described 
 
 ### Semantic Colors
 
-| Element | Color | Hex |
-|---------|-------|-----|
-| Line-start labels (`Label:`) | Gold/Amber | `#FFD580` |
-| Action verbs (`create`, `delete`, `send`) | Slate Blue | `#82AAFF` |
-| Logical operators (`AND`, `OR`, `MUST`) | Orange | `#FF9D00` |
-| Log level: ERROR/FATAL | Red | `#FF4444` |
-| Log level: WARN | Orange | `#FFA500` |
-| Log level: INFO | Blue | `#4FC1FF` |
-| Log level: DEBUG/TRACE | Gray | `#7C7C7C` |
-| Inline code (`` `code` ``) | Light blue on dark | `#9CDCFE` on `#1E1E3A` |
-| PASS / Checkmarks | Green | `#00FF7F` |
-| FAIL / BLOCKING | Red | `#FF0000` / `#FF4444` |
-| Cross-references (`B1-D3`) | Tag blue | TextMate scope |
-| Conditionals (`If`, `When`) | Keyword purple | TextMate scope |
+**Line-start labels** — Gold/Amber `#FFD580`
+Any `CamelCase Label:` pattern at the start of a line.
+
+**Action verbs** — Slate Blue `#82AAFF`
+`log` `logged` `logging` `test` `tested` `testing` `scan` `scanned` `scanning` `re-scan` `re-scanned` `rescan` `rescanned` `move` `moved` `moving` `delete` `deleted` `deleting` `rename` `renamed` `renaming` `remove` `removed` `removing` `send` `sent` `sending` `receive` `received` `receiving` `purge` `purged` `purging` `create` `created` `creating` `update` `updated` `updating` `fetch` `fetched` `fetching` `write` `written` `writing` `read` `skip` `skipped` `skipping` `merge` `merged` `merging` `apply` `applied` `applying` `trigger` `triggered` `triggering` `queue` `queued` `queuing` `retry` `retried` `retrying` `fail` `failed` `failing` `verify` `verified` `verifying` `process` `processed` `processing` `download` `downloaded` `downloading` `upload` `uploaded` `uploading` `import` `imported` `importing` `export` `exported` `exporting` `resolve` `resolved` `resolving` `detect` `detected` `detecting` `preserve` `preserved` `preserving` `restore` `restored` `restoring` `associate` `associated` `associating` `cascade` `cascaded` `cascading` `dismantle` `dismantled` `dismantling` `reconcile` `reconciled` `reconciling`
+
+**Logical operators (ALL CAPS)** — Orange `#FF9D00`
+`AND` `OR` `NOT` `NOR` `ALL` `NONE` `BOTH` `EITHER` `NEITHER` `ALWAYS` `NEVER` `ONLY` `MUST` `SHALL` `REQUIRED` `OPTIONAL` `EVERY` `ANY` `EACH`
+
+**Log levels**
+| Level | Words | Color | Hex |
+|-------|-------|-------|-----|
+| Error | `ERROR` `FATAL` | Red | `#FF4444` |
+| Warn | `WARN` `WARNING` | Orange | `#FFA500` |
+| Info | `INFO` | Blue | `#4FC1FF` |
+| Debug | `DEBUG` `TRACE` | Gray | `#7C7C7C` |
+
+**Severity markers**
+| Marker | Color | Hex |
+|--------|-------|-----|
+| `BLOCKING` | Red | `#FF4444` |
+| `SPEC ISSUE` | Light red | `#FF6B6B` |
+| `PASS` | Green | `#00FF7F` |
+| `FAIL` | Red | `#FF0000` |
+
+**Conditionals** — Keyword purple (TextMate scope)
+`If` `When` `Unless` `While` `For each` `For all` `On` (at start of line or after list marker)
+
+**Bracket conditions** — Keyword purple (TextMate scope)
+`[true]` `[false]` `[found]` `[not found]` `[yes]` `[no]` `[exists]` `[gone]` `[drifted]` `[no drift]` `[missing]` `[present]` `[ambiguous]`
+
+**Cross-references** — Tag blue (TextMate scope)
+`B1-D3` style dimension references (pattern: `B<number>-D<number>`)
+
+**Inline code** — Light blue `#9CDCFE` on dark `#1E1E3A`
+Any text wrapped in backticks.
+
+**Booleans** — Boolean constant (TextMate scope)
+`true` `false` `null` `none` `None` `YES` `NO`
+
+**HTTP methods** — Keyword (TextMate scope)
+`GET` `POST` `PUT` `DELETE` `PATCH`
 
 ## Installation
 
